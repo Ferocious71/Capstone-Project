@@ -2,21 +2,23 @@ name: Vulnerability Scan
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Build the Docker Image
-        run: docker build -t app .
-      - name: Scan the Docker Image
-        uses: aquasecurity/trivy-action@master
-        with:
-          image: app
-      - name: Scan the Docker Image
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Trivy
         run: |
-            trivy image --format table --severity HIGH,CRITICAL my-image
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.45.0/trivy_0.45.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.45.0_Linux-64bit.deb
+
+      - name: Scan Docker Image
+        run: |
+          trivy image app
