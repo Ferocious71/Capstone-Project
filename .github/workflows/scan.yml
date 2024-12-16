@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build the Docker Image
-        run: docker build -t my-image .
+        run: docker build -t app .
       - name: Scan the Docker Image
         uses: aquasecurity/trivy-action@master
         with:
-          image: my-image
+          image: app
       - name: Scan the Docker Image
         run: |
             trivy image --format table --severity HIGH,CRITICAL my-image
